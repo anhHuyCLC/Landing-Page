@@ -26,11 +26,11 @@ export interface AmbientTheme {
 }
 
 export interface ActiveBuild {
-    cpu: ComponentOption | null;
-    gpu: ComponentOption | null;
-    ram: ComponentOption | null;
-    storage: ComponentOption | null;
-    psu: ComponentOption | null;
+    cpu: ComponentOption;
+    gpu: ComponentOption;
+    ram: ComponentOption;
+    storage: ComponentOption;
+    psu: ComponentOption;
     theme: AmbientTheme;
 }
 
