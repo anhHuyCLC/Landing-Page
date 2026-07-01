@@ -265,3 +265,17 @@ export const GAMES: BenchmarkGame[] = [
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBFLh0TxSrtVLnn94xL1Ty1qwvmSjfYOpOqs-lz4yUBSUv_YTu9U7UYJclHmnDv4uwOOEhjYnsw5COVEuvXU660a_MpH52Oj0PnflhqM1fkvdvosJEbS-GUwV8_8I1g_ZJpTHK17m5JEg3S6V8iMw-fgKmYiI-iB0EUepzL1Qj9fDx1vMpiDUS6KZLEzmSY-e8DP-Q8yROIhe-QQWJ-daLZM3-8zu4QPaYH_u0gWPJ-GRsGQOBxZSMExtkn4NiMz_44yMw19TYi6SjD",
   }
 ];
+
+export const formatPrice = (valueInUSD: number, showSign: boolean = false) => {
+  const valueInVND = valueInUSD * 25000;
+  const formatted = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Math.abs(valueInVND));
+
+  if (valueInUSD === 0) return formatted;
+  const sign = valueInUSD > 0 ? "+" : "-";
+  return showSign ? `${sign}${formatted}` : `${valueInUSD < 0 ? "-" : ""}${formatted}`;
+};
