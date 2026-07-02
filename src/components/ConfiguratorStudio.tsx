@@ -1,7 +1,8 @@
 
 import { Gift, Sparkles, X } from "lucide-react";
-import type { ActiveBuild, AmbientTheme, ComponentOption } from "../type";
-import { CATEGORIES, THEMES, formatPrice } from "../data";
+import { formatPrice, type ActiveBuild, type AmbientTheme, type ComponentCategory, type ComponentOption } from "../type";
+import { useEffect, useState } from "react";
+import { componentService } from "../service/components";
 
 
 interface ConfiguratorStudioProps {
@@ -19,7 +20,32 @@ export default function ConfiguratorStudio({
     engravingText,
     setEngravingText
 }: ConfiguratorStudioProps) {
+    const [categories, setCategories] = useState<ComponentCategory[]>([]);
+    const [themes, setThemes] = useState<AmbientTheme[]>([])
+    const [loading, setLoading] = useState(true)
     const primaryColor = activeBuild.theme.primaryColor;
+
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                setLoading(true);
+                const data = await componentService.getAllCategories()
+                const data2 = await componentService.getAllTheme()
+                setCategories(data);
+                setThemes(data2)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        loadCategories()
+    }, [])
+    if (loading) return (
+        <div className="lg:col-span-7 flex items-center justify-center h-64">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+    )
     return (
         <div className="lg:col-span-7 space-y-10">
             <div className="space-y-4">
@@ -42,7 +68,7 @@ export default function ConfiguratorStudio({
                     SYSTEM LIGHTING ACCENT (AURA RGB)
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {THEMES.map((theme) => (
+                    {themes.map((theme) => (
                         <button key={theme.id}
                             onClick={() => selectTheme(theme)}
                             className={`p-3.5 rounded-xl border flex items-center gap-2.5 transition-all duration-300 text-left active:scale-95 ${activeBuild.theme.id === theme.id ? "bg-white/5" : "hover:bg-white/5 border-white/5 bg-transparent"}`}
@@ -62,7 +88,7 @@ export default function ConfiguratorStudio({
                 </div>
             </div>
 
-            {CATEGORIES.map((category) => (
+            {categories.map((category) => (
                 <div key={category.id} className="glass-panel rounded-3xl p-6 border border-white/5 space-y-4">
                     <div className="flex justify-between items-center">
                         <h3 className="font-mono text-xs uppercase tracking-widest text-white flex items-center gap-2">

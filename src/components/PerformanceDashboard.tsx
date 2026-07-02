@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
 import { Monitor, Flame } from "lucide-react";
-import { GAMES } from "../data";
 import type { ActiveBuild, BenchmarkGame } from "../type";
+import { useEffect, useState } from "react";
+import { componentService } from "../service/components";
 
 interface PerformanceDashboardProps {
   activeBuild: ActiveBuild;
@@ -23,6 +24,28 @@ export default function PerformanceDashboard({
   aiComputeScore,
 }: PerformanceDashboardProps) {
   const primaryColor = activeBuild.theme.primaryColor;
+  const [games, setGames] = useState<BenchmarkGame[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadGame = async () => {
+      try {
+        setLoading(true);
+        const data = await componentService.getAllGame();
+        setGames(data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadGame();
+  }, []);
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <section id="telemetry" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative">
@@ -38,15 +61,14 @@ export default function PerformanceDashboard({
 
         {/* Game / Task selectors to update telemetry dynamically */}
         <div className="flex flex-wrap gap-2">
-          {GAMES.map((game) => (
+          {games.map((game) => (
             <button
               key={game.id}
               onClick={() => setSelectedGame(game)}
-              className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 ${
-                selectedGame.id === game.id
+              className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 ${selectedGame.id === game.id
                   ? "bg-white text-black font-bold"
                   : "glass-panel hover:bg-white/5 text-[#bac9cc]"
-              }`}
+                }`}
             >
               {game.name}
             </button>

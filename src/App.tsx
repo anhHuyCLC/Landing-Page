@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingBag } from "lucide-react";
-import { CATEGORIES, THEMES, BASE_PRICE, formatPrice } from "./data";
 
 import HeroSection from "./components/HeroSection";
 import ExplodedView from "./components/ExplodedView";
@@ -9,23 +8,48 @@ import PerformanceDashboard from "./components/PerformanceDashboard";
 import ConfiguratorStudio from "./components/ConfiguratorStudio";
 import BuildSummary from "./components/BuildSummary";
 import CheckoutModal from "./components/CheckoutModal";
-import type { ActiveBuild, AmbientTheme, BenchmarkGame, ComponentOption } from "./type";
+import { formatPrice, type ActiveBuild, type AmbientTheme, type BenchmarkGame, type ComponentCategory, type ComponentOption } from "./type";
+import { componentService } from "./service/components";
 
 export default function App() {
-  // Navigation State
   const [activeTab, setActiveTab] = useState<string>("configurator");
+  const [loading, setLoading] = useState(true);
+  const BASE_PRICE = 4222;
 
-  // Selection States
-  const [activeBuild, setActiveBuild] = useState<ActiveBuild>({
-    cpu: CATEGORIES[0].options[0],
-    gpu: CATEGORIES[1].options[0],
-    ram: CATEGORIES[2].options[0],
-    storage: CATEGORIES[3].options[0],
-    psu: CATEGORIES[4].options[0],
-    theme: THEMES[0],
-  });
+  const [activeBuild, setActiveBuild] = useState<ActiveBuild | null>(null);
 
-  // Telemetry game selection
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        setLoading(true);
+        const data = await componentService.getAllCategories();
+        const data2 = await componentService.getAllTheme();
+
+        if (Array.isArray(data) && data.length >= 5 && Array.isArray(data2) && data2.length > 0) {
+          const cpuCat = data.find((c: ComponentCategory) => c.id === "cpu") || data[0];
+          const gpuCat = data.find((c: ComponentCategory) => c.id === "gpu") || data[1] || data[0];
+          const ramCat = data.find((c: ComponentCategory) => c.id === "ram") || data[2] || data[0];
+          const storageCat = data.find((c: ComponentCategory) => c.id === "storage") || data[3] || data[0];
+          const psuCat = data.find((c: ComponentCategory) => c.id === "psu") || data[4] || data[0];
+
+          setActiveBuild({
+            cpu: cpuCat.options[0],
+            gpu: gpuCat.options[0],
+            ram: ramCat.options[0],
+            storage: storageCat.options[0],
+            psu: psuCat.options[0],
+            theme: data2[0],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCategories();
+  }, []);
+
   const [selectedGame, setSelectedGame] = useState<BenchmarkGame>({
     id: "cyberpunk",
     name: "Cyberpunk 2077",
@@ -33,19 +57,13 @@ export default function App() {
     image: "",
   });
 
-  // Selected Hotspot details on exploded view
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
-
-  // Custom configuration additions
   const [engravingText, setEngravingText] = useState<string>("");
   const [isGift, setIsGift] = useState<boolean>(false);
   const [shippingMethod, setShippingMethod] = useState<"standard" | "express">("standard");
-
-  // Checkout modal
   const [showCheckoutModal, setShowCheckoutModal] = useState<boolean>(false);
   const [checkoutStep, setCheckoutStep] = useState<"summary" | "shipping" | "success">("summary");
 
-  // Checkout Form fields
   const [shippingForm, setShippingForm] = useState({
     fullName: "",
     email: "",
@@ -54,80 +72,34 @@ export default function App() {
     city: "",
   });
 
-  // Random tracking ID (stable across renders)
   const [trackingNumber, setTrackingNumber] = useState("");
 
-  // Dynamic values calculation
-  const totalPrice =
-    BASE_PRICE +
-    activeBuild.cpu.priceDelta +
-    activeBuild.gpu.priceDelta +
-    activeBuild.ram.priceDelta +
-    activeBuild.storage.priceDelta +
-    activeBuild.psu.priceDelta +
-    (shippingMethod === "express" ? 45 : 0) +
-    (engravingText ? 25 : 0);
-
-  const totalPowerDraw =
-    120 + // baseline power draw for high-end cooling, fans, motherboard
-    activeBuild.cpu.powerDraw +
-    activeBuild.gpu.powerDraw +
-    activeBuild.ram.powerDraw +
-    activeBuild.storage.powerDraw;
-
-  // Max support power depends on selected PSU
-  const psuLimit =
-    activeBuild.psu.id === "850w-gold" ? 850 : activeBuild.psu.id === "1000w-gold" ? 1000 : 1200;
-  const powerSafetyMargin = psuLimit - totalPowerDraw;
-
-  // Telemetry formula metrics
-  const currentFps = Math.round(
-    selectedGame.baseFps * activeBuild.cpu.fpsFactor * activeBuild.gpu.fpsFactor
-  );
-  const renderTime = (9.8 * activeBuild.cpu.renderFactor * activeBuild.ram.renderFactor).toFixed(1);
-  const peakThermal = Math.round(65 * activeBuild.cpu.thermalFactor * activeBuild.gpu.thermalFactor);
-  const aiComputeScore = (
-    2.4 *
-    activeBuild.gpu.fpsFactor *
-    (activeBuild.ram.id === "96gb-ddr5" ? 1.15 : 1.0)
-  ).toFixed(1);
-
-  // Mouse ambient light effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const glow = document.getElementById("mouse-glow");
-      if (glow) {
-        glow.style.left = `${e.clientX - 192}px`;
-        glow.style.top = `${e.clientY - 192}px`;
-      }
+      requestAnimationFrame(() => {
+        const glow = document.getElementById("mouse-glow");
+        if (glow) {
+          glow.style.transform = `translate(${e.clientX - 192}px, ${e.clientY - 192}px)`;
+        }
+      });
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Update selected option in category
   const selectOption = (categoryId: string, option: ComponentOption) => {
-    setActiveBuild((prev) => ({
-      ...prev,
-      [categoryId]: option,
-    }));
+    setActiveBuild((prev) => (prev ? { ...prev, [categoryId]: option } : prev));
   };
 
-  // Switch custom RGB theme
   const selectTheme = (theme: AmbientTheme) => {
-    setActiveBuild((prev) => ({
-      ...prev,
-      theme,
-    }));
+    setActiveBuild((prev) => (prev ? { ...prev, theme } : prev));
   };
 
-  // Handle shipping form submission
   const handleProceedToShipping = (e: React.FormEvent) => {
     e.preventDefault();
     setCheckoutStep("shipping");
   };
 
-  // Simulate Order Finalization
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (!shippingForm.fullName || !shippingForm.email || !shippingForm.address) {
@@ -142,25 +114,58 @@ export default function App() {
     setEngravingText("");
   };
 
+  if (loading || !activeBuild) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  const totalPrice =
+    BASE_PRICE +
+    activeBuild.cpu.priceDelta +
+    activeBuild.gpu.priceDelta +
+    activeBuild.ram.priceDelta +
+    activeBuild.storage.priceDelta +
+    activeBuild.psu.priceDelta +
+    (shippingMethod === "express" ? 45 : 0) +
+    (engravingText ? 25 : 0);
+
+  const totalPowerDraw =
+    120 +
+    activeBuild.cpu.powerDraw +
+    activeBuild.gpu.powerDraw +
+    activeBuild.ram.powerDraw +
+    activeBuild.storage.powerDraw;
+
+  const psuLimit =
+    activeBuild.psu.id === "850w-gold" ? 850 : activeBuild.psu.id === "1000w-gold" ? 1000 : 1200;
+  const powerSafetyMargin = psuLimit - totalPowerDraw;
+  const currentFps = Math.round(
+    selectedGame.baseFps * activeBuild.cpu.fpsFactor * activeBuild.gpu.fpsFactor
+  );
+  const renderTime = (9.8 * activeBuild.cpu.renderFactor * activeBuild.ram.renderFactor).toFixed(1);
+  const peakThermal = Math.round(65 * activeBuild.cpu.thermalFactor * activeBuild.gpu.thermalFactor);
+  const aiComputeScore = (
+    2.4 *
+    activeBuild.gpu.fpsFactor *
+    (activeBuild.ram.id === "96gb-ddr5" ? 1.15 : 1.0)
+  ).toFixed(1);
+
+
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] font-sans relative overflow-x-hidden selection:bg-[#D4AF37] selection:text-black">
-      {/* Background Ambient Spotlight that responds to custom RGB Theme */}
+    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] font-sans relative [overflow-x:clip] selection:bg-[#D4AF37] selection:text-black">
       <div
         id="mouse-glow"
-        className="fixed w-96 h-96 rounded-full pointer-events-none z-0 transition-transform duration-500 blur-[120px] opacity-15"
+        className="fixed w-96 left-0 top-0 h-96 rounded-full pointer-events-none z-0 transition-transform duration-500 blur-[120px] opacity-15"
         style={{
           backgroundColor: activeBuild.theme.primaryColor,
         }}
       />
-
-      {/* Decorative vertical rails simulating system hardware aesthetics */}
       <div className="absolute top-0 left-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
       <div className="absolute top-0 right-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
-
-      {/* Dynamic Header */}
       <nav className="fixed top-0 w-full z-40 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl">
         <div className="flex justify-between items-center w-full px-6 md:px-20 py-6 max-w-7xl mx-auto">
-          {/* Brand Logo with ambient custom spotlight */}
+
           <div className="flex items-center gap-3">
             <div
               className="w-2.5 h-2.5 rounded-full transition-colors duration-500"
@@ -176,8 +181,6 @@ export default function App() {
               AURORA
             </span>
           </div>
-
-          {/* Nav Links */}
           <div className="hidden md:flex gap-10 items-center">
             <button
               onClick={() => {
@@ -223,7 +226,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Call to Action Button with glowing border */}
           <div className="flex items-center gap-6">
             <div className="hidden xl:flex flex-col text-right">
               <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase">LIVE TOTAL</span>
@@ -248,22 +250,16 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Main Container */}
       <main className="pt-24 pb-20 relative z-10">
-        {/* Hero Banner Section */}
         <HeroSection primaryColor={activeBuild.theme.primaryColor} />
-
-        {/* Section 2: Interactive Exploded Hardware View */}
         <ExplodedView
           activeBuild={activeBuild}
           activeHotspot={activeHotspot}
           setActiveHotspot={setActiveHotspot}
         />
 
-        {/* Section 3: Dual Column Highlight Block */}
         <HardwareHighlights primaryColor={activeBuild.theme.primaryColor} />
 
-        {/* Section 4: Performance Dashboard (Bento Grid) */}
         <PerformanceDashboard
           activeBuild={activeBuild}
           selectedGame={selectedGame}
@@ -274,7 +270,6 @@ export default function App() {
           aiComputeScore={aiComputeScore}
         />
 
-        {/* Section 5: Configurator Studio */}
         <section id="customizer" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative">
           <div
             className="absolute -right-1/4 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5 blur-[120px] pointer-events-none"
@@ -306,7 +301,6 @@ export default function App() {
         </section>
       </main>
 
-      {/* Footer Section */}
       <footer className="border-t border-white/5 py-16 bg-[#0c1314]">
         <div className="max-w-7xl mx-auto px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-8">
           <div className="space-y-2">
@@ -332,8 +326,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-
-      {/* Checkout Process Walkthrough Modal */}
       <CheckoutModal
         showCheckoutModal={showCheckoutModal}
         setShowCheckoutModal={setShowCheckoutModal}

@@ -1,8 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Send, ShieldCheck, Truck } from "lucide-react"
-import type { ActiveBuild } from "../type";
-import { formatPrice } from "../data";
+import { formatPrice, type ActiveBuild } from "../type";
 
 interface ShippingFormType {
   fullName: string;
