@@ -15,7 +15,7 @@ export default function ExplodedView({
   const primaryColor = activeBuild.theme.primaryColor;
 
   return (
-    <section id="components" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative">
+    <section id="components" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative cv-auto">
       <div className="text-center mb-16 space-y-4">
         <h2 className="font-display text-3xl md:text-5xl font-extrabold text-white tracking-tight">
           Precision Engineered
@@ -26,11 +26,12 @@ export default function ExplodedView({
       </div>
 
       <div className="relative w-full h-[500px] md:h-[700px] glass-panel rounded-3xl overflow-hidden group flex items-center justify-center border border-white/5 shadow-2xl">
-        {/* Real PC Artwork Backing */}
         <div className="absolute inset-0 z-0">
           <img
             alt="Exploded PC View"
             src="/images/exploded-pc.jpg"
+            width={1920}
+            height={1080}
             className="w-full h-full object-cover opacity-40 mix-blend-screen scale-105 group-hover:scale-100 transition-transform duration-1000"
             loading="lazy"
             decoding="async"
@@ -38,9 +39,7 @@ export default function ExplodedView({
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
         </div>
 
-        {/* Interactive Custom Interactive Hotspots */}
         <div className="absolute inset-0 z-10">
-          {/* CPU Hotspot */}
           <div
             className="absolute top-[32%] left-[48%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("cpu")}
@@ -58,7 +57,6 @@ export default function ExplodedView({
               />
             </div>
 
-            {/* Popover overlay */}
             <div
               className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "cpu" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
                 }`}
@@ -76,7 +74,6 @@ export default function ExplodedView({
             </div>
           </div>
 
-          {/* GPU Hotspot */}
           <div
             className="absolute top-[52%] left-[42%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("gpu")}
@@ -94,7 +91,6 @@ export default function ExplodedView({
               />
             </div>
 
-            {/* Popover overlay */}
             <div
               className={`absolute right-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "gpu" ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
                 }`}
@@ -112,7 +108,6 @@ export default function ExplodedView({
             </div>
           </div>
 
-          {/* RAM Hotspot */}
           <div
             className="absolute top-[28%] left-[58%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("ram")}
@@ -129,7 +124,6 @@ export default function ExplodedView({
               />
             </div>
 
-            {/* Popover overlay */}
             <div
               className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "ram" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
                 }`}
@@ -148,7 +142,6 @@ export default function ExplodedView({
           </div>
         </div>
 
-        {/* Hint Badge */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-full border-white/10 flex items-center gap-2 pointer-events-none">
           <Info size={12} style={{ color: primaryColor }} />
           <span className="font-mono text-[10px] uppercase text-white/80">

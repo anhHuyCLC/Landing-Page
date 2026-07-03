@@ -56,7 +56,6 @@ export default function CheckoutModal({
     <AnimatePresence>
       {showCheckoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Dark overlay backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -65,14 +64,12 @@ export default function CheckoutModal({
             className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
 
-          {/* Modal Body */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative w-full max-w-2xl glass-panel bg-[#151515] rounded-3xl overflow-hidden border border-white/10 shadow-2xl z-10 flex flex-col max-h-[90vh]"
           >
-            {/* Close Button */}
             <button
               onClick={() => setShowCheckoutModal(false)}
               className="absolute top-5 right-5 p-2 rounded-full hover:bg-white/5 text-white/60 hover:text-white z-20"
@@ -81,7 +78,6 @@ export default function CheckoutModal({
             </button>
 
             <div className="p-8 overflow-y-auto space-y-6">
-              {/* Steps Header indicator */}
               <div className="flex items-center gap-4 pb-4 border-b border-white/5">
                 <div className="flex items-center gap-2">
                   <div
@@ -117,7 +113,6 @@ export default function CheckoutModal({
                 </div>
               </div>
 
-              {/* Step 1 Content: Order Review */}
               {checkoutStep === "summary" && (
                 <div className="space-y-6">
                   <div className="space-y-2">
@@ -159,7 +154,6 @@ export default function CheckoutModal({
                     )}
                   </div>
 
-                  {/* Shipping Method Option */}
                   <div className="space-y-3">
                     <label className="font-mono text-xs uppercase tracking-widest text-white block">
                       Phương thức vận chuyển
@@ -233,7 +227,6 @@ export default function CheckoutModal({
                 </div>
               )}
 
-              {/* Step 2 Content: Shipping Form */}
               {checkoutStep === "shipping" && (
                 <form onSubmit={handlePlaceOrder} className="space-y-6">
                   <div className="space-y-2">
@@ -339,7 +332,6 @@ export default function CheckoutModal({
                 </form>
               )}
 
-              {/* Step 3 Content: Order Finalized Success Celebration */}
               {checkoutStep === "success" && (
                 <div className="text-center py-8 space-y-6">
                   <div className="w-16 h-16 bg-[#00e0b0]/10 border border-[#00e0b0]/30 rounded-full flex items-center justify-center mx-auto text-[#00e0b0]">

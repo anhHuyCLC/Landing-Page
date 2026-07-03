@@ -6,7 +6,7 @@ interface HardwareHighlightsProps {
 
 export default function HardwareHighlights({ primaryColor }: HardwareHighlightsProps) {
   return (
-    <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto space-y-32">
+    <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto space-y-32 cv-auto">
       {/* Highlight Block 1: CPU */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
@@ -42,10 +42,12 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
             <img
               alt="CPU Hardware Zoom"
               src="/images/cpu-zoom.jpg"
+              width={1200}
+              height={800}
               className="w-full h-full object-cover rounded-2xl"
               loading="lazy"
               decoding="async"
-              fetchPriority="high"
+              fetchPriority="low"
             />
           </div>
         </div>
@@ -58,6 +60,8 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
             <img
               alt="GPU Hardware Zoom"
               src="/images/gpu-zoom.jpg"
+              width={1200}
+              height={800}
               className="w-full h-full object-cover rounded-2xl"
               loading="lazy"
               decoding="async"

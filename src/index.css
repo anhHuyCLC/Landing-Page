@@ -80,3 +80,26 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #333333;
 }
+
+@utility cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-display: swap;
+}
+@font-face {
+  font-family: "Playfair Display";
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist";
+  font-display: swap;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

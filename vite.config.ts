@@ -2,34 +2,51 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 
   build: {
-    // Gộp tất cả CSS thành 1 file duy nhất, tránh nhiều <link> block render
-    cssCodeSplit: false,
+    cssCodeSplit: true,
 
-    // Tối ưu chunk splitting cho JS
     rollupOptions: {
       output: {
-        // Tách vendor libraries thành chunk riêng để cache tốt hơn
         manualChunks: (id) => {
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'vendor';
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'vendor-react';
           }
-          if (id.includes('node_modules/lucide-react') || id.includes('node_modules/framer-motion')) {
-            return 'ui';
+          if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion')) {
+            return 'vendor-motion';
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-icons';
+          }
+          if (id.includes('node_modules/axios')) {
+            return 'vendor-http';
+          }
+          if (
+            id.includes('src/components/CheckoutModal') ||
+            id.includes('src/components/BuildSummary')
+          ) {
+            return 'chunk-checkout';
+          }
+          if (
+            id.includes('src/components/PerformanceDashboard') ||
+            id.includes('src/components/HardwareHighlights') ||
+            id.includes('src/components/ExplodedView') ||
+            id.includes('src/components/ConfiguratorStudio')
+          ) {
+            return 'chunk-below-fold';
           }
         },
-        // Đặt tên chunks rõ ràng
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
 
-    // Giảm kích thước chunk warning threshold
-    chunkSizeWarningLimit: 1000,
+    target: 'es2020',
+    chunkSizeWarningLimit: 600,
+
+    sourcemap: false,
   },
 })
