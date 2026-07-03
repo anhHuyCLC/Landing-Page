@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { motion } from "motion/react";
 import { Sparkles, ArrowRight, ChevronDown } from "lucide-react";
 
 interface HeroSectionProps {
@@ -15,16 +14,11 @@ const HeroSection = memo(function HeroSection({ primaryColor }: HeroSectionProps
     <section className="relative min-h-[90vh] flex flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto z-10 text-center items-center">
       {/* Visual Floating Accent with GPU compositing */}
       <div
-        className="absolute top-1/4 w-72 h-72 rounded-full opacity-10 blur-[120px] transition-all duration-1000 animate-pulse pointer-events-none will-change-transform"
+        className="absolute top-1/4 w-72 h-72 rounded-full opacity-10 blur-[120px] pointer-events-none will-change-transform"
         style={{ backgroundColor: primaryColor }}
       />
 
-      <motion.div
-        initial={{ opacity: 1, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="space-y-6 max-w-4xl"
-      >
+      <div className="space-y-6 max-w-4xl">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 mb-2">
           <Sparkles size={14} style={{ color: primaryColor }} />
           <span className="font-mono text-[10px] tracking-widest uppercase text-white/90">
@@ -59,7 +53,7 @@ const HeroSection = memo(function HeroSection({ primaryColor }: HeroSectionProps
             Explore Hardware
           </button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Scroll Indicator */}
       <button

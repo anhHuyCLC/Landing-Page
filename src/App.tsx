@@ -8,11 +8,9 @@ import React, {
 } from "react";
 import { ShoppingBag, Menu, X } from "lucide-react";
 
-// Above-fold: eager import (critical path for instantaneous LCP)
 import HeroSection from "./components/HeroSection";
 import ViewportSection from "./components/ViewportSection";
 
-// Below-fold: lazy imports deferred until user scrolls into viewport proximity
 const ExplodedView = lazy(() => import("./components/ExplodedView"));
 const HardwareHighlights = lazy(() => import("./components/HardwareHighlights"));
 const PerformanceDashboard = lazy(() => import("./components/PerformanceDashboard"));
@@ -48,7 +46,6 @@ export default function App() {
   const [themes, setThemes] = useState<AmbientTheme[]>([]);
   const [games, setGames] = useState<BenchmarkGame[]>([]);
 
-  // 1 parallel fetch cycle on initial load
   useEffect(() => {
     const loadAll = async () => {
       try {
@@ -114,7 +111,6 @@ export default function App() {
   });
   const [trackingNumber, setTrackingNumber] = useState("");
 
-  // Mouse glow with cancelAnimationFrame + passive event listener to eliminate Forced Reflow
   useEffect(() => {
     let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
@@ -396,7 +392,7 @@ export default function App() {
             style={{ backgroundColor: primaryColor }}
           />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <ViewportSection minHeight="800px">
+            <ViewportSection className="lg:col-span-7" minHeight="800px">
               <Suspense fallback={<SectionFallback />}>
                 <ConfiguratorStudio
                   activeBuild={activeBuild}
@@ -410,7 +406,7 @@ export default function App() {
               </Suspense>
             </ViewportSection>
 
-            <ViewportSection minHeight="500px">
+            <ViewportSection className="lg:col-span-5" minHeight="500px">
               <Suspense fallback={<SectionFallback />}>
                 <BuildSummary
                   activeBuild={activeBuild}

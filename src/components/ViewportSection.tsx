@@ -4,12 +4,14 @@ interface ViewportSectionProps {
   children: ReactNode;
   fallback?: ReactNode;
   minHeight?: string;
+  className?: string;
 }
 
 export default function ViewportSection({
   children,
   fallback,
   minHeight = "400px",
+  className = "",
 }: ViewportSectionProps) {
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +35,11 @@ export default function ViewportSection({
   }, []);
 
   return (
-    <div ref={containerRef} style={{ minHeight: isVisible ? undefined : minHeight }}>
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ minHeight: isVisible ? undefined : minHeight }}
+    >
       {isVisible ? children : fallback || <div style={{ height: minHeight }} />}
     </div>
   );
