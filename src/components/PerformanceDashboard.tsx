@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { motion } from "motion/react";
 import { Monitor, Flame } from "lucide-react";
 import type { ActiveBuild, BenchmarkGame } from "../type";
 
@@ -25,9 +24,10 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
   games,
 }: PerformanceDashboardProps) {
   const primaryColor = activeBuild.theme.primaryColor;
+  const fpsProgressRatio = Math.min(Math.max(currentFps / 540, 0), 1);
 
   return (
-    <section id="telemetry" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative">
+    <section id="telemetry" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative cv-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
         <div>
           <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: primaryColor }}>
@@ -56,9 +56,10 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Live FPS Counter Card — GPU Composited scaleX transform (0 Reflows) */}
         <div className="md:col-span-2 glass-panel rounded-3xl p-8 flex flex-col justify-between min-h-[320px] relative overflow-hidden group border border-white/5 shadow-xl">
           <div
-            className="absolute top-0 right-0 w-48 h-48 opacity-10 blur-3xl rounded-full transition-all duration-500 group-hover:opacity-20 pointer-events-none"
+            className="absolute top-0 right-0 w-48 h-48 opacity-10 blur-3xl rounded-full transition-all duration-500 group-hover:opacity-20 pointer-events-none will-change-transform"
             style={{ backgroundColor: primaryColor }}
           />
 
@@ -86,12 +87,10 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
 
           <div className="space-y-4 mt-8">
             <div className="w-full bg-white/5 h-1.5 rounded-full relative overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${(currentFps / 540) * 100}%` }}
-                transition={{ duration: 0.5 }}
-                className="h-full rounded-full shadow-lg"
+              <div
+                className="h-full rounded-full shadow-lg transition-transform duration-500 origin-left will-change-transform"
                 style={{
+                  transform: `scaleX(${fpsProgressRatio})`,
                   backgroundColor: primaryColor,
                   boxShadow: `0 0 10px ${primaryColor}`,
                 }}
@@ -105,6 +104,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
           </div>
         </div>
 
+        {/* Video Rendering Counter */}
         <div className="glass-panel rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 shadow-xl">
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-5 blur-2xl rounded-full pointer-events-none"
@@ -130,6 +130,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
           </p>
         </div>
 
+        {/* Thermals Circle Progress Gauge */}
         <div className="glass-panel rounded-3xl p-8 flex flex-col justify-between items-center text-center relative overflow-hidden group border border-white/5 shadow-xl">
           <span className="font-mono text-[10px] tracking-wider text-[#bac9cc] uppercase mb-4 self-start">
             Thermals &amp; Dissipation
@@ -146,7 +147,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
                 fill="transparent"
                 strokeDasharray={364}
                 strokeDashoffset={364 - (364 * peakThermal) / 100}
-                className="transition-all duration-500"
+                className="transition-[stroke-dashoffset] duration-500"
               />
             </svg>
             <div className="absolute flex flex-col items-center">
@@ -162,6 +163,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
           </div>
         </div>
 
+        {/* AI Compute Score */}
         <div className="md:col-span-2 glass-panel rounded-3xl p-8 flex items-center justify-between border border-white/5 shadow-xl">
           <div className="space-y-2">
             <span className="font-mono text-[10px] tracking-wider text-[#00e0b0] uppercase">

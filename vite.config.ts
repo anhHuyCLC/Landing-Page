@@ -1,9 +1,22 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+function nonBlockingCss(): Plugin {
+  return {
+    name: 'non-blocking-css',
+    apply: 'build',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<link rel="stylesheet" crossorigin href="(.*?)">/g,
+        '<link rel="preload" href="$1" as="style"><link rel="stylesheet" href="$1" media="print" onload="this.media=\'all\'">'
+      )
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), nonBlockingCss()],
 
   build: {
     cssCodeSplit: true,
@@ -46,7 +59,6 @@ export default defineConfig({
 
     target: 'es2020',
     chunkSizeWarningLimit: 600,
-
     sourcemap: false,
   },
 })

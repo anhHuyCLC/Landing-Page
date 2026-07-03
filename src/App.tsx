@@ -8,8 +8,11 @@ import React, {
 } from "react";
 import { ShoppingBag, Menu, X } from "lucide-react";
 
+// Above-fold: eager import (critical path for instantaneous LCP)
 import HeroSection from "./components/HeroSection";
+import ViewportSection from "./components/ViewportSection";
 
+// Below-fold: lazy imports deferred until user scrolls into viewport proximity
 const ExplodedView = lazy(() => import("./components/ExplodedView"));
 const HardwareHighlights = lazy(() => import("./components/HardwareHighlights"));
 const PerformanceDashboard = lazy(() => import("./components/PerformanceDashboard"));
@@ -45,6 +48,7 @@ export default function App() {
   const [themes, setThemes] = useState<AmbientTheme[]>([]);
   const [games, setGames] = useState<BenchmarkGame[]>([]);
 
+  // 1 parallel fetch cycle on initial load
   useEffect(() => {
     const loadAll = async () => {
       try {
@@ -110,6 +114,7 @@ export default function App() {
   });
   const [trackingNumber, setTrackingNumber] = useState("");
 
+  // Mouse glow with cancelAnimationFrame + passive event listener to eliminate Forced Reflow
   useEffect(() => {
     let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
@@ -236,6 +241,7 @@ export default function App() {
       <div className="absolute top-0 left-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
       <div className="absolute top-0 right-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
 
+      {/* NAV */}
       <nav className="fixed top-0 w-full z-40 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl">
         <div className="flex justify-between items-center w-full px-6 lg:px-20 py-6 max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
@@ -303,6 +309,7 @@ export default function App() {
           </div>
         </div>
 
+        {/* Mobile drawer */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
@@ -338,7 +345,7 @@ export default function App() {
               </button>
             ))}
             <div className="pt-3 flex justify-between items-center">
-              <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase">Live Total</span>
+              <span className="font-mono text-[9px] tracking-widest text-[#bac9cc] uppercase">Live Total</span>
               <span className="font-mono text-sm font-bold" style={{ color: primaryColor }}>
                 {formatPrice(totalPrice)}
               </span>
@@ -347,33 +354,40 @@ export default function App() {
         </div>
       </nav>
 
+      {/* MAIN — HeroSection is eager above-fold, below-fold sections are lazy-deferred via ViewportSection */}
       <main className="pt-24 pb-20 relative z-10">
         <HeroSection primaryColor={primaryColor} />
 
-        <Suspense fallback={<SectionFallback />}>
-          <ExplodedView
-            activeBuild={activeBuild}
-            activeHotspot={activeHotspot}
-            setActiveHotspot={setActiveHotspot}
-          />
-        </Suspense>
+        <ViewportSection minHeight="600px">
+          <Suspense fallback={<SectionFallback />}>
+            <ExplodedView
+              activeBuild={activeBuild}
+              activeHotspot={activeHotspot}
+              setActiveHotspot={setActiveHotspot}
+            />
+          </Suspense>
+        </ViewportSection>
 
-        <Suspense fallback={<SectionFallback />}>
-          <HardwareHighlights primaryColor={primaryColor} />
-        </Suspense>
+        <ViewportSection minHeight="500px">
+          <Suspense fallback={<SectionFallback />}>
+            <HardwareHighlights primaryColor={primaryColor} />
+          </Suspense>
+        </ViewportSection>
 
-        <Suspense fallback={<SectionFallback />}>
-          <PerformanceDashboard
-            activeBuild={activeBuild}
-            selectedGame={selectedGame}
-            setSelectedGame={setSelectedGame}
-            currentFps={perfStats.currentFps}
-            renderTime={perfStats.renderTime}
-            peakThermal={perfStats.peakThermal}
-            aiComputeScore={perfStats.aiComputeScore}
-            games={games}
-          />
-        </Suspense>
+        <ViewportSection minHeight="600px">
+          <Suspense fallback={<SectionFallback />}>
+            <PerformanceDashboard
+              activeBuild={activeBuild}
+              selectedGame={selectedGame}
+              setSelectedGame={setSelectedGame}
+              currentFps={perfStats.currentFps}
+              renderTime={perfStats.renderTime}
+              peakThermal={perfStats.peakThermal}
+              aiComputeScore={perfStats.aiComputeScore}
+              games={games}
+            />
+          </Suspense>
+        </ViewportSection>
 
         <section id="customizer" className="py-24 px-6 md:px-20 max-w-7xl mx-auto relative">
           <div
@@ -381,28 +395,33 @@ export default function App() {
             style={{ backgroundColor: primaryColor }}
           />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <Suspense fallback={<SectionFallback />}>
-              <ConfiguratorStudio
-                activeBuild={activeBuild}
-                selectOption={selectOption}
-                selectTheme={selectTheme}
-                engravingText={engravingText}
-                setEngravingText={setEngravingText}
-                categories={categories}
-                themes={themes}
-              />
-            </Suspense>
-            <Suspense fallback={<SectionFallback />}>
-              <BuildSummary
-                activeBuild={activeBuild}
-                totalPrice={totalPrice}
-                totalPowerDraw={perfStats.totalPowerDraw}
-                psuLimit={perfStats.psuLimit}
-                powerSafetyMargin={perfStats.powerSafetyMargin}
-                engravingText={engravingText}
-                onProceedToCheckout={openCheckout}
-              />
-            </Suspense>
+            <ViewportSection minHeight="800px">
+              <Suspense fallback={<SectionFallback />}>
+                <ConfiguratorStudio
+                  activeBuild={activeBuild}
+                  selectOption={selectOption}
+                  selectTheme={selectTheme}
+                  engravingText={engravingText}
+                  setEngravingText={setEngravingText}
+                  categories={categories}
+                  themes={themes}
+                />
+              </Suspense>
+            </ViewportSection>
+
+            <ViewportSection minHeight="500px">
+              <Suspense fallback={<SectionFallback />}>
+                <BuildSummary
+                  activeBuild={activeBuild}
+                  totalPrice={totalPrice}
+                  totalPowerDraw={perfStats.totalPowerDraw}
+                  psuLimit={perfStats.psuLimit}
+                  powerSafetyMargin={perfStats.powerSafetyMargin}
+                  engravingText={engravingText}
+                  onProceedToCheckout={openCheckout}
+                />
+              </Suspense>
+            </ViewportSection>
           </div>
         </section>
       </main>
