@@ -65,6 +65,12 @@
   100% { transform: scale(0.8); opacity: 0; box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
 }
 
+/* Hero fade-in — CSS thuần thay framer-motion để không block LCP */
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -11,19 +11,51 @@ import CheckoutModal from "./components/CheckoutModal";
 import { formatPrice, type ActiveBuild, type AmbientTheme, type BenchmarkGame, type ComponentCategory, type ComponentOption } from "./type";
 import { componentService } from "./service/components";
 
+// Default fallback data — UI renders immediately with this, no API wait needed
+const DEFAULT_THEME: AmbientTheme = {
+  id: "arctic",
+  name: "Arctic Blue",
+  primaryColor: "#38BDF8",
+  glowColor: "rgba(56,189,248,0.3)",
+  borderColor: "rgba(56,189,248,0.3)",
+  gradientFrom: "#38BDF8",
+};
+
+const DEFAULT_OPTION: ComponentOption = {
+  id: "default",
+  name: "Loading...",
+  specs: "",
+  priceDelta: 0,
+  powerDraw: 0,
+  fpsFactor: 1,
+  renderFactor: 1,
+  thermalFactor: 1,
+};
+
+const DEFAULT_BUILD: ActiveBuild = {
+  cpu: DEFAULT_OPTION,
+  gpu: DEFAULT_OPTION,
+  ram: DEFAULT_OPTION,
+  storage: DEFAULT_OPTION,
+  psu: DEFAULT_OPTION,
+  theme: DEFAULT_THEME,
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("configurator");
-  const [loading, setLoading] = useState(true);
   const BASE_PRICE = 4222;
 
-  const [activeBuild, setActiveBuild] = useState<ActiveBuild | null>(null);
+  // Khởi tạo với default data ngay — không block render
+  const [activeBuild, setActiveBuild] = useState<ActiveBuild>(DEFAULT_BUILD);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        setLoading(true);
-        const data = await componentService.getAllCategories();
-        const data2 = await componentService.getAllTheme();
+        // Gọi 2 API song song thay vì tuần tự — giảm ~50% thời gian chờ
+        const [data, data2] = await Promise.all([
+          componentService.getAllCategories(),
+          componentService.getAllTheme(),
+        ]);
 
         if (Array.isArray(data) && data.length >= 5 && Array.isArray(data2) && data2.length > 0) {
           const cpuCat = data.find((c: ComponentCategory) => c.id === "cpu") || data[0];
@@ -43,8 +75,7 @@ export default function App() {
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
+        // Giữ nguyên DEFAULT_BUILD nếu API lỗi
       }
     };
     loadCategories();
@@ -114,11 +145,7 @@ export default function App() {
     setEngravingText("");
   };
 
-  if (loading || !activeBuild) return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-    </div>
-  );
+  // Không còn loading block — UI render ngay với DEFAULT_BUILD
 
   const totalPrice =
     BASE_PRICE +
