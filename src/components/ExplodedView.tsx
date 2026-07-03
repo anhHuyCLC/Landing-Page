@@ -49,9 +49,9 @@ const ExplodedView = memo(function ExplodedView({
         </div>
 
         <div className="absolute inset-0 z-10">
-          {/* CPU Hotspot */}
+          {/* CPU Hotspot - Centered precisely on CPU AIO Pump Block */}
           <div
-            className="absolute top-[32%] left-[48%] -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-[46%] left-[48%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("cpu")}
             onMouseLeave={() => setActiveHotspot(null)}
             onClick={() => setActiveHotspot("cpu")}
@@ -89,9 +89,9 @@ const ExplodedView = memo(function ExplodedView({
             </div>
           </div>
 
-          {/* GPU Hotspot */}
+          {/* GPU Hotspot - Centered precisely on GPU Fan Hub */}
           <div
-            className="absolute top-[52%] left-[42%] -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-[54%] left-[34%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("gpu")}
             onMouseLeave={() => setActiveHotspot(null)}
             onClick={() => setActiveHotspot("gpu")}
@@ -129,9 +129,9 @@ const ExplodedView = memo(function ExplodedView({
             </div>
           </div>
 
-          {/* RAM Hotspot */}
+          {/* RAM Hotspot - Centered precisely on top of RAM Module Slots */}
           <div
-            className="absolute top-[28%] left-[58%] -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-[34%] left-[58%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("ram")}
             onMouseLeave={() => setActiveHotspot(null)}
             onClick={() => setActiveHotspot("ram")}

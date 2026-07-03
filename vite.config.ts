@@ -2,6 +2,7 @@ import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+// Custom plugin to make production CSS non-render-blocking
 function nonBlockingCss(): Plugin {
   return {
     name: 'non-blocking-css',
@@ -36,17 +37,17 @@ export default defineConfig({
           if (id.includes('node_modules/axios')) {
             return 'vendor-http';
           }
-          if (
-            id.includes('src/components/CheckoutModal') ||
-            id.includes('src/components/BuildSummary')
-          ) {
-            return 'chunk-checkout';
+          // CheckoutModal is isolated in chunk-modal (only loaded on Build Now click)
+          if (id.includes('src/components/CheckoutModal')) {
+            return 'chunk-modal';
           }
+          // All below-fold page sections
           if (
             id.includes('src/components/PerformanceDashboard') ||
             id.includes('src/components/HardwareHighlights') ||
             id.includes('src/components/ExplodedView') ||
-            id.includes('src/components/ConfiguratorStudio')
+            id.includes('src/components/ConfiguratorStudio') ||
+            id.includes('src/components/BuildSummary')
           ) {
             return 'chunk-below-fold';
           }

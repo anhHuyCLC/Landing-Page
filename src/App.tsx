@@ -20,6 +20,7 @@ const CheckoutModal = lazy(() => import("./components/CheckoutModal"));
 
 import {
   formatPrice,
+  DEFAULT_BUILD,
   type ActiveBuild,
   type AmbientTheme,
   type BenchmarkGame,
@@ -38,18 +39,18 @@ const BASE_PRICE = 4222;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("configurator");
-  const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const [activeBuild, setActiveBuild] = useState<ActiveBuild | null>(null);
+  // Initialize with DEFAULT_BUILD for instant initial HTML/CSS paint (0ms LCP delay!)
+  const [activeBuild, setActiveBuild] = useState<ActiveBuild>(DEFAULT_BUILD);
   const [categories, setCategories] = useState<ComponentCategory[]>([]);
   const [themes, setThemes] = useState<AmbientTheme[]>([]);
   const [games, setGames] = useState<BenchmarkGame[]>([]);
 
+  // Parallel API fetch in background without blocking initial paint
   useEffect(() => {
     const loadAll = async () => {
       try {
-        setLoading(true);
         const [data, data2, gamesData] = await Promise.all([
           componentService.getAllCategories(),
           componentService.getAllTheme(),
@@ -82,8 +83,6 @@ export default function App() {
         }
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     };
     loadAll();
@@ -131,13 +130,13 @@ export default function App() {
 
   const selectOption = useCallback(
     (categoryId: string, option: ComponentOption) => {
-      setActiveBuild((prev) => (prev ? { ...prev, [categoryId]: option } : prev));
+      setActiveBuild((prev) => ({ ...prev, [categoryId]: option }));
     },
     []
   );
 
   const selectTheme = useCallback((theme: AmbientTheme) => {
-    setActiveBuild((prev) => (prev ? { ...prev, theme } : prev));
+    setActiveBuild((prev) => ({ ...prev, theme }));
   }, []);
 
   const handleProceedToShipping = useCallback((e: React.FormEvent) => {
@@ -166,7 +165,6 @@ export default function App() {
   }, []);
 
   const totalPrice = useMemo(() => {
-    if (!activeBuild) return BASE_PRICE;
     return (
       BASE_PRICE +
       activeBuild.cpu.priceDelta +
@@ -180,7 +178,6 @@ export default function App() {
   }, [activeBuild, shippingMethod, engravingText]);
 
   const perfStats = useMemo(() => {
-    if (!activeBuild) return null;
     const psuLimit =
       activeBuild.psu.id === "850w-gold"
         ? 850
@@ -213,17 +210,6 @@ export default function App() {
       ).toFixed(1),
     };
   }, [activeBuild, selectedGame]);
-
-  if (loading || !activeBuild || !perfStats) {
-    return (
-      <div
-        className="flex items-center justify-center h-screen bg-[#050505]"
-        style={{ minHeight: "100dvh" }}
-      >
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   const primaryColor = activeBuild.theme.primaryColor;
 
@@ -423,7 +409,7 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="border-t border-white/5 py-16 bg-[#0c1314]">
+      <footer className="border-t border-[#d1e0e3]/10 py-16 bg-[#0c1314]">
         <div className="max-w-7xl mx-auto px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-8">
           <div className="space-y-2">
             <span className="font-display text-xl font-black text-white">AURORA PC</span>
