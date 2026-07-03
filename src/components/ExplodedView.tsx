@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Info } from "lucide-react";
 import type { ActiveBuild } from "../type";
 
@@ -7,7 +8,7 @@ interface ExplodedViewProps {
   setActiveHotspot: (hotspot: string | null) => void;
 }
 
-export default function ExplodedView({
+const ExplodedView = memo(function ExplodedView({
   activeBuild,
   activeHotspot,
   setActiveHotspot,
@@ -27,19 +28,28 @@ export default function ExplodedView({
 
       <div className="relative w-full h-[500px] md:h-[700px] glass-panel rounded-3xl overflow-hidden group flex items-center justify-center border border-white/5 shadow-2xl">
         <div className="absolute inset-0 z-0">
-          <img
-            alt="Exploded PC View"
-            src="/images/exploded-pc.jpg"
-            width={1920}
-            height={1080}
-            className="w-full h-full object-cover opacity-40 mix-blend-screen scale-105 group-hover:scale-100 transition-transform duration-1000"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcSet="/images/exploded-pc-sm.webp 640w, /images/exploded-pc.webp 1200w"
+              sizes="(max-width: 640px) 100vw, 1200px"
+            />
+            <img
+              alt="Exploded PC View"
+              src="/images/exploded-pc.webp"
+              width={1200}
+              height={700}
+              className="w-full h-full object-cover opacity-40 mix-blend-screen scale-105 group-hover:scale-100 transition-transform duration-1000"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
         </div>
 
         <div className="absolute inset-0 z-10">
+          {/* CPU Hotspot */}
           <div
             className="absolute top-[32%] left-[48%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("cpu")}
@@ -58,8 +68,9 @@ export default function ExplodedView({
             </div>
 
             <div
-              className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "cpu" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-                }`}
+              className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${
+                activeHotspot === "cpu" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
+              }`}
             >
               <span className="font-mono text-[9px] tracking-wider uppercase" style={{ color: primaryColor }}>
                 Component Detail
@@ -74,6 +85,7 @@ export default function ExplodedView({
             </div>
           </div>
 
+          {/* GPU Hotspot */}
           <div
             className="absolute top-[52%] left-[42%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("gpu")}
@@ -92,8 +104,9 @@ export default function ExplodedView({
             </div>
 
             <div
-              className={`absolute right-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "gpu" ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-                }`}
+              className={`absolute right-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${
+                activeHotspot === "gpu" ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+              }`}
             >
               <span className="font-mono text-[9px] tracking-wider uppercase" style={{ color: primaryColor }}>
                 Component Detail
@@ -108,11 +121,13 @@ export default function ExplodedView({
             </div>
           </div>
 
+          {/* RAM Hotspot */}
           <div
             className="absolute top-[28%] left-[58%] -translate-x-1/2 -translate-y-1/2"
             onMouseEnter={() => setActiveHotspot("ram")}
             onMouseLeave={() => setActiveHotspot(null)}
-            onClick={() => setActiveHotspot("ram")}>
+            onClick={() => setActiveHotspot("ram")}
+          >
             <div className="w-8 h-8 rounded-full bg-white/10 border border-white/30 flex items-center justify-center cursor-pointer relative group/pulse">
               <div
                 className="w-2.5 h-2.5 rounded-full transition-colors duration-500"
@@ -125,8 +140,9 @@ export default function ExplodedView({
             </div>
 
             <div
-              className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${activeHotspot === "ram" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-                }`}
+              className={`absolute left-10 top-1/2 -translate-y-1/2 w-72 glass-panel p-5 rounded-2xl transition-all duration-300 pointer-events-none shadow-2xl z-20 ${
+                activeHotspot === "ram" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
+              }`}
             >
               <span className="font-mono text-[9px] tracking-wider uppercase" style={{ color: primaryColor }}>
                 Component Detail
@@ -151,4 +167,6 @@ export default function ExplodedView({
       </div>
     </section>
   );
-}
+});
+
+export default ExplodedView;

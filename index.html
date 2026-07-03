@@ -8,19 +8,25 @@
 
   <title>AURORA PC - Build Beyond Limits</title>
 
+  <!-- Preconnect Railway API to eliminate DNS/TLS roundtrips -->
+  <link rel="preconnect" href="https://belandingpage-production.up.railway.app" crossorigin />
+
+  <!-- DNS Prefetch & Preconnect Google Fonts -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+  <!-- Preload Hero LCP Image in Next-Gen WebP format -->
   <link
     rel="preload"
     as="image"
-    href="/images/exploded-pc.jpg"
+    href="/images/exploded-pc.webp"
+    type="image/webp"
     fetchpriority="high"
   />
 
+  <!-- Preload Primary Display Font Woff2 -->
   <link
     rel="preload"
     as="font"
@@ -29,6 +35,7 @@
     crossorigin
   />
 
+  <!-- Load Google Fonts asynchronously with font-display: swap -->
   <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap"
     onload="this.onload=null;this.rel='stylesheet'" />

@@ -1,10 +1,11 @@
+import { memo } from "react";
 import { Check } from "lucide-react";
 
 interface HardwareHighlightsProps {
   primaryColor: string;
 }
 
-export default function HardwareHighlights({ primaryColor }: HardwareHighlightsProps) {
+const HardwareHighlights = memo(function HardwareHighlights({ primaryColor }: HardwareHighlightsProps) {
   return (
     <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto space-y-32 cv-auto">
       {/* Highlight Block 1: CPU */}
@@ -39,16 +40,22 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
 
         <div className="lg:col-span-7 order-1 lg:order-2 h-[350px] md:h-[500px] relative">
           <div className="absolute inset-0 glass-panel rounded-3xl p-4 neon-glow hover:shadow-[0_0_50px_rgba(0,229,255,0.05)] transition-all duration-500">
-            <img
-              alt="CPU Hardware Zoom"
-              src="/images/cpu-zoom.jpg"
-              width={1200}
-              height={800}
-              className="w-full h-full object-cover rounded-2xl"
-              loading="lazy"
-              decoding="async"
-              fetchPriority="low"
-            />
+            <picture>
+              <source
+                type="image/webp"
+                srcSet="/images/cpu-zoom-sm.webp 480w, /images/cpu-zoom.webp 800w"
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+              <img
+                alt="CPU Hardware Zoom"
+                src="/images/cpu-zoom.webp"
+                width={800}
+                height={533}
+                className="w-full h-full object-cover rounded-2xl"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
       </div>
@@ -57,15 +64,22 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-7 h-[350px] md:h-[500px] relative">
           <div className="absolute inset-0 glass-panel rounded-3xl p-4 neon-glow hover:shadow-[0_0_50px_rgba(0,229,255,0.05)] transition-all duration-500">
-            <img
-              alt="GPU Hardware Zoom"
-              src="/images/gpu-zoom.jpg"
-              width={1200}
-              height={800}
-              className="w-full h-full object-cover rounded-2xl"
-              loading="lazy"
-              decoding="async"
-            />
+            <picture>
+              <source
+                type="image/webp"
+                srcSet="/images/gpu-zoom-sm.webp 480w, /images/gpu-zoom.webp 800w"
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+              <img
+                alt="GPU Hardware Zoom"
+                src="/images/gpu-zoom.webp"
+                width={800}
+                height={533}
+                className="w-full h-full object-cover rounded-2xl"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           </div>
         </div>
 
@@ -99,4 +113,6 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
       </div>
     </section>
   );
-}
+});
+
+export default HardwareHighlights;
