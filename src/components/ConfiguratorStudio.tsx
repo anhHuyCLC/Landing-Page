@@ -32,7 +32,7 @@ const ConfiguratorStudio = memo(function ConfiguratorStudio({
         <h2 className="font-display text-3xl md:text-5xl font-extrabold text-white">
           Build Your Aurora
         </h2>
-        <p className="font-sans text-[#bac9cc]">
+        <p className="font-sans text-[#d1e0e3]">
           Tùy biến các linh kiện cao cấp theo nhu cầu sử dụng của bạn. Tất cả tùy chọn đều được hỗ trợ bởi chế
           độ bảo hành vàng 1-đổi-1 của Aurora Systems.
         </p>
@@ -48,6 +48,7 @@ const ConfiguratorStudio = memo(function ConfiguratorStudio({
           {themes.map((theme) => (
             <button key={theme.id}
               onClick={() => selectTheme(theme)}
+              aria-label={`Select ${theme.name} theme`}
               className={`p-3.5 rounded-xl border flex items-center gap-2.5 transition-all duration-300 text-left active:scale-95 ${activeBuild.theme.id === theme.id ? "bg-white/5" : "hover:bg-white/5 border-white/5 bg-transparent"}`}
               style={{
                 borderColor:
@@ -127,17 +128,25 @@ const ConfiguratorStudio = memo(function ConfiguratorStudio({
           <Gift size={14} style={{ color: primaryColor }} />
           AURORA SIGNATURE ENGRAVING (TÙY CHỌN KHẮC TÊN TRÊN KÍNH)
         </h3>
-        <p className="font-sans text-xs text-[#bac9cc]">
+        <p className="font-sans text-xs text-[#d1e0e3]">
           Khắc la-ze chữ ký hoặc slogan cá nhân lên tấm kính cường lực của case PC. Một điểm nhấn tối thượng để
           khẳng định cá tính. (+ {formatPrice(25)})
         </p>
         <div className="space-y-3">
-          <input type="text" maxLength={32} value={engravingText} onChange={(e) => setEngravingText(e.target.value)} placeholder="Ví dụ: ALEX SUPREME MACHINE (Tối đa 32 ký tự)" className="w-full bg-[#0B0B0B] border border-white/10 hover:border-white/20 focus:border-white focus:outline-none rounded-xl px-4 py-3.5 font-mono text-xs text-white transition-colors" />
+          <input
+            type="text"
+            maxLength={32}
+            value={engravingText}
+            onChange={(e) => setEngravingText(e.target.value)}
+            aria-label="Khắc tên cá nhân lên kính"
+            placeholder="Ví dụ: ALEX SUPREME MACHINE (Tối đa 32 ký tự)"
+            className="w-full bg-[#0B0B0B] border border-white/10 hover:border-white/20 focus:border-white focus:outline-none rounded-xl px-4 py-3.5 font-mono text-xs text-white transition-colors"
+          />
 
           {engravingText && (
             <div className="glass-panel rounded-xl p-4 border border-white/5 flex items-center justify-between gap-3">
               <div className="space-y-1 min-w-0">
-                <span className="font-mono text-[9px] text-[#bac9cc] uppercase">
+                <span className="font-mono text-[9px] text-[#d1e0e3] uppercase">
                   Bản xem trước phần khắc la-ze kính:
                 </span>
                 <div
@@ -149,6 +158,7 @@ const ConfiguratorStudio = memo(function ConfiguratorStudio({
               </div>
               <button
                 onClick={() => setEngravingText("")}
+                aria-label="Xóa chữ khắc"
                 className="p-1 rounded-full hover:bg-white/5 text-white/60 hover:text-white shrink-0"
               >
                 <X size={14} />

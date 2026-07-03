@@ -290,6 +290,7 @@ export default function App() {
             </div>
             <button
               onClick={openCheckout}
+              aria-label="Build Now"
               className="relative overflow-hidden px-4 lg:px-6 py-2.5 lg:py-3 font-mono text-[10px] uppercase tracking-[0.2em] font-bold text-black transition-all duration-300 shadow-xl active:scale-95 hover:bg-white cursor-pointer"
               style={{ backgroundColor: primaryColor }}
             >
@@ -345,7 +346,7 @@ export default function App() {
               </button>
             ))}
             <div className="pt-3 flex justify-between items-center">
-              <span className="font-mono text-[9px] tracking-widest text-[#bac9cc] uppercase">Live Total</span>
+              <span className="font-mono text-[9px] tracking-widest text-[#d1e0e3] uppercase">Live Total</span>
               <span className="font-mono text-sm font-bold" style={{ color: primaryColor }}>
                 {formatPrice(totalPrice)}
               </span>
@@ -430,14 +431,14 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-8">
           <div className="space-y-2">
             <span className="font-display text-xl font-black text-white">AURORA PC</span>
-            <p className="font-mono text-[10px] tracking-wider text-[#bac9cc]">
+            <p className="font-mono text-[10px] tracking-wider text-[#d1e0e3]">
               © 2026 AURORA SYSTEMS. ALL RIGHTS RESERVED. ENGINEERED FOR SUPREMACY.
             </p>
           </div>
           <div className="flex flex-wrap md:justify-end gap-6 font-mono text-xs">
             {["Privacy Policy", "Terms of Service", "Warranty & Returns", "Contact Support"].map(
               (link) => (
-                <a key={link} href="#" className="text-[#bac9cc] hover:text-white transition-colors">
+                <a key={link} href="#" className="text-[#d1e0e3] hover:text-white transition-colors">
                   {link}
                 </a>
               )

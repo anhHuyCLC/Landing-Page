@@ -22,7 +22,7 @@ const HardwareHighlights = memo(function HardwareHighlights({ primaryColor }: Ha
             <br />
             Compute Power
           </h3>
-          <p className="font-sans text-base text-[#bac9cc] leading-relaxed">
+          <p className="font-sans text-base text-[#d1e0e3] leading-relaxed">
             Được xây dựng trên nền tảng vi kiến trúc mới nhất, mang lại sức mạnh đa nhiệm cực hạn cho các tác vụ dựng hình 4K chuyên nghiệp đồng thời duy trì xung nhịp đơn nhân tối đa phục vụ những trận game Esport kịch tính.
           </p>
 
@@ -95,7 +95,7 @@ const HardwareHighlights = memo(function HardwareHighlights({ primaryColor }: Ha
             <br />
             Fidelity
           </h3>
-          <p className="font-sans text-base text-[#bac9cc] leading-relaxed">
+          <p className="font-sans text-base text-[#d1e0e3] leading-relaxed">
             Được tiếp sức mạnh từ kiến trúc NVIDIA Ada Lovelace đỉnh cao. Tận hưởng công nghệ dò tia Ray Tracing toàn phần kết hợp thuật toán tái tạo khung hình DLSS 3 mang lại chất lượng đồ họa tuyệt diệu.
           </p>
 

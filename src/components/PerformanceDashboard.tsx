@@ -46,7 +46,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
               className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-300 ${
                 selectedGame.id === game.id
                   ? "bg-white text-black font-bold"
-                  : "glass-panel hover:bg-white/5 text-[#bac9cc]"
+                  : "glass-panel hover:bg-white/5 text-[#d1e0e3]"
               }`}
             >
               {game.name}
@@ -56,7 +56,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Live FPS Counter Card — GPU Composited scaleX transform (0 Reflows) */}
+        {/* Live FPS Counter Card */}
         <div className="md:col-span-2 glass-panel rounded-3xl p-8 flex flex-col justify-between min-h-[320px] relative overflow-hidden group border border-white/5 shadow-xl">
           <div
             className="absolute top-0 right-0 w-48 h-48 opacity-10 blur-3xl rounded-full transition-all duration-500 group-hover:opacity-20 pointer-events-none will-change-transform"
@@ -65,7 +65,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
 
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <span className="font-mono text-[10px] tracking-wider text-[#bac9cc] uppercase">
+              <span className="font-mono text-[10px] tracking-wider text-[#d1e0e3] uppercase">
                 Gaming Simulation
               </span>
               <h3 className="font-display text-2xl md:text-4xl font-extrabold text-white">
@@ -79,7 +79,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
               >
                 {currentFps}
               </div>
-              <span className="font-mono text-[9px] tracking-widest text-[#bac9cc] uppercase">
+              <span className="font-mono text-[9px] tracking-widest text-[#d1e0e3] uppercase">
                 AVG FPS @ 4K MAX
               </span>
             </div>
@@ -96,7 +96,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
                 }}
               />
             </div>
-            <div className="flex justify-between font-mono text-[9px] text-[#bac9cc]">
+            <div className="flex justify-between font-mono text-[9px] text-[#d1e0e3]">
               <span>0 FPS</span>
               <span>1% Low: {Math.round(currentFps * 0.78)} FPS</span>
               <span>Target: {selectedGame.id === "valorant" ? "600 FPS" : "180 FPS"}</span>
@@ -111,7 +111,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
             style={{ backgroundColor: "#cdbdff" }}
           />
           <div className="flex justify-between items-center">
-            <span className="font-mono text-[10px] tracking-wider text-[#bac9cc] uppercase">
+            <span className="font-mono text-[10px] tracking-wider text-[#d1e0e3] uppercase">
               Media Productivity
             </span>
             <Monitor size={18} className="text-[#cdbdff]" />
@@ -120,11 +120,11 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
             <div className="font-display text-5xl font-black text-white tracking-tight">
               {renderTime}s
             </div>
-            <span className="font-mono text-[10px] tracking-widest text-[#bac9cc] uppercase block mt-2">
+            <span className="font-mono text-[10px] tracking-widest text-[#d1e0e3] uppercase block mt-2">
               4K VIDEO RENDER (1GB)
             </span>
           </div>
-          <p className="font-sans text-xs text-[#bac9cc]">
+          <p className="font-sans text-xs text-[#d1e0e3]">
             Được tăng tốc bởi luồng phần cứng tối ưu và xung nhịp bộ nhớ DDR5{" "}
             {activeBuild.ram?.id === "96gb-ddr5" ? "nhanh vượt trội" : "hiệu năng cao"}.
           </p>
@@ -132,7 +132,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
 
         {/* Thermals Circle Progress Gauge */}
         <div className="glass-panel rounded-3xl p-8 flex flex-col justify-between items-center text-center relative overflow-hidden group border border-white/5 shadow-xl">
-          <span className="font-mono text-[10px] tracking-wider text-[#bac9cc] uppercase mb-4 self-start">
+          <span className="font-mono text-[10px] tracking-wider text-[#d1e0e3] uppercase mb-4 self-start">
             Thermals &amp; Dissipation
           </span>
           <div className="relative w-36 h-36 flex items-center justify-center my-2">
@@ -152,12 +152,12 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
             </svg>
             <div className="absolute flex flex-col items-center">
               <span className="font-display text-3xl font-black text-white">{peakThermal}°C</span>
-              <span className="font-mono text-[8px] tracking-wider uppercase text-[#bac9cc]">
+              <span className="font-mono text-[8px] tracking-wider uppercase text-[#d1e0e3]">
                 Peak Thermals
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 mt-4 text-xs text-[#bac9cc]">
+          <div className="flex items-center gap-1.5 mt-4 text-xs text-[#d1e0e3]">
             <Flame size={12} className="text-orange-400" />
             <span>Liquid Cooling: {peakThermal > 70 ? "High Load" : "Optimum Cool"}</span>
           </div>
@@ -170,7 +170,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
               Neural Acceleration
             </span>
             <h3 className="font-display text-2xl font-bold text-white">Stable Diffusion XL</h3>
-            <p className="font-sans text-xs text-[#bac9cc] max-w-sm">
+            <p className="font-sans text-xs text-[#d1e0e3] max-w-sm">
               Tăng tốc tạo hình ảnh bằng AI nhờ số lượng nhân Tensor vượt trội của cấu hình{" "}
               {activeBuild.gpu?.name}.
             </p>
@@ -179,7 +179,7 @@ const PerformanceDashboard = memo(function PerformanceDashboard({
             <div className="font-display text-5xl font-black text-[#00e0b0] drop-shadow-[0_0_15px_rgba(0,224,176,0.2)]">
               {aiComputeScore}
             </div>
-            <span className="font-mono text-[9px] tracking-widest text-[#bac9cc] uppercase">
+            <span className="font-mono text-[9px] tracking-widest text-[#d1e0e3] uppercase">
               IMAGES / SECOND
             </span>
           </div>

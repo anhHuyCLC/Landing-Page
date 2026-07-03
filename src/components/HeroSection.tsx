@@ -27,7 +27,7 @@ const HeroSection = memo(function HeroSection({ primaryColor }: HeroSectionProps
       >
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 mb-2">
           <Sparkles size={14} style={{ color: primaryColor }} />
-          <span className="font-mono text-[10px] tracking-widest uppercase text-white/80">
+          <span className="font-mono text-[10px] tracking-widest uppercase text-white/90">
             Next-Generation Computing
           </span>
         </div>
@@ -36,7 +36,7 @@ const HeroSection = memo(function HeroSection({ primaryColor }: HeroSectionProps
           Build Beyond <span className="text-gradient">Limits</span>
         </h1>
 
-        <p className="font-sans text-lg md:text-xl text-[#bac9cc] max-w-2xl mx-auto leading-relaxed">
+        <p className="font-sans text-lg md:text-xl text-[#d1e0e3] max-w-2xl mx-auto leading-relaxed">
           Trải nghiệm hiệu năng chơi game và sáng tạo tối thượng từ thế hệ phần cứng vượt trội. Được chế tác tỉ mỉ dành riêng cho những nhà vô địch.
         </p>
 
@@ -62,15 +62,16 @@ const HeroSection = memo(function HeroSection({ primaryColor }: HeroSectionProps
       </motion.div>
 
       {/* Scroll Indicator */}
-      <div
+      <button
         onClick={() => scrollToSection("components")}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer opacity-50 hover:opacity-100 transition-opacity"
+        aria-label="Scroll to explore components"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer opacity-70 hover:opacity-100 transition-opacity bg-transparent border-0"
       >
-        <span className="font-mono text-[9px] tracking-widest uppercase text-[#bac9cc]">
+        <span className="font-mono text-[9px] tracking-widest uppercase text-[#d1e0e3]">
           Scroll to explore
         </span>
         <ChevronDown size={14} className="animate-bounce" style={{ color: primaryColor }} />
-      </div>
+      </button>
     </section>
   );
 });

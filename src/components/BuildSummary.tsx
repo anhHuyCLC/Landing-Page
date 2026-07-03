@@ -37,35 +37,35 @@ const BuildSummary = memo(function BuildSummary({
 
         <div className="space-y-4 mb-8">
           <div className="flex justify-between items-start pb-4 border-b border-white/5">
-            <span className="font-sans text-xs text-[#bac9cc]">Processor</span>
+            <span className="font-sans text-xs text-[#d1e0e3]">Processor</span>
             <span className="font-sans text-xs font-bold text-white text-right">
               {activeBuild.cpu.name.replace("Intel Core ", "").replace("AMD ", "")}
             </span>
           </div>
 
           <div className="flex justify-between items-start pb-4 border-b border-white/5">
-            <span className="font-sans text-xs text-[#bac9cc]">Graphics</span>
+            <span className="font-sans text-xs text-[#d1e0e3]">Graphics</span>
             <span className="font-sans text-xs font-bold text-white text-right">
               {activeBuild.gpu.name.replace("NVIDIA GeForce ", "").replace("AMD ", "")}
             </span>
           </div>
 
           <div className="flex justify-between items-start pb-4 border-b border-white/5">
-            <span className="font-sans text-xs text-[#bac9cc]">System Memory</span>
+            <span className="font-sans text-xs text-[#d1e0e3]">System Memory</span>
             <span className="font-sans text-xs font-bold text-white text-right">
               {activeBuild.ram.name.split("Dual Channel")[0]}
             </span>
           </div>
 
           <div className="flex justify-between items-start pb-4 border-b border-white/5">
-            <span className="font-sans text-xs text-[#bac9cc]">Solid Storage</span>
+            <span className="font-sans text-xs text-[#d1e0e3]">Solid Storage</span>
             <span className="font-sans text-xs font-bold text-white text-right">
               {activeBuild.storage.name.split(",")[0]}
             </span>
           </div>
 
           <div className="flex justify-between items-start pb-4 border-b border-white/5">
-            <span className="font-sans text-xs text-[#bac9cc]">Power Supply</span>
+            <span className="font-sans text-xs text-[#d1e0e3]">Power Supply</span>
             <span className="font-sans text-xs font-bold text-white text-right">
               {activeBuild.psu.name.split("Fully Modular")[0]}
             </span>
@@ -73,7 +73,7 @@ const BuildSummary = memo(function BuildSummary({
 
           {engravingText && (
             <div className="flex justify-between items-start pb-4 border-b border-white/5">
-              <span className="font-sans text-xs text-[#bac9cc]">Signature Engraving</span>
+              <span className="font-sans text-xs text-[#d1e0e3]">Signature Engraving</span>
               <span className="font-sans text-xs font-bold text-[#00e0b0] text-right">Enabled (+{formatPrice(25)})</span>
             </div>
           )}
@@ -81,7 +81,7 @@ const BuildSummary = memo(function BuildSummary({
 
         <div className="glass-panel p-4 rounded-2xl border border-white/5 space-y-2 mb-8">
           <div className="flex justify-between items-center">
-            <span className="font-mono text-[9px] tracking-widest text-[#bac9cc] uppercase flex items-center gap-1.5">
+            <span className="font-mono text-[9px] tracking-widest text-[#d1e0e3] uppercase flex items-center gap-1.5">
               <Zap size={10} style={{ color: primaryColor }} />
               ESTIMATED POWER DRAW
             </span>
@@ -100,16 +100,16 @@ const BuildSummary = memo(function BuildSummary({
             />
           </div>
 
-          <div className="flex justify-between items-center text-[10px] text-[#bac9cc]">
+          <div className="flex justify-between items-center text-[10px] text-[#d1e0e3]">
             <span>Safety Margin: {powerSafetyMargin}W</span>
-            <span className={powerSafetyMargin < 150 ? "text-orange-400 font-bold" : "text-[#bac9cc]"}>
+            <span className={powerSafetyMargin < 150 ? "text-orange-400 font-bold" : "text-[#d1e0e3]"}>
               {powerSafetyMargin < 150 ? "Low Headroom" : "High Efficiency"}
             </span>
           </div>
         </div>
 
         <div className="flex justify-between items-end mb-8">
-          <div className="font-mono text-[10px] tracking-widest text-[#bac9cc] uppercase">
+          <div className="font-mono text-[10px] tracking-widest text-[#d1e0e3] uppercase">
             TOTAL ESTIMATED
           </div>
           <div className="font-display text-3xl font-black text-white tracking-tight">
@@ -119,6 +119,7 @@ const BuildSummary = memo(function BuildSummary({
 
         <button
           onClick={onProceedToCheckout}
+          aria-label="Proceed to Checkout"
           className="w-full py-4 font-mono text-[10px] uppercase tracking-widest text-black font-bold transition-all duration-300 hover:bg-white active:scale-95 cursor-pointer relative overflow-hidden group/btn"
           style={{
             backgroundColor: primaryColor,
