@@ -23,7 +23,7 @@ export default function BuildSummary({
     const primaryColor = activeBuild.theme.primaryColor;
 
     return (
-        <div className="lg:col-span-5 self-start sticky top-24 space-y-6">
+        <div className="lg:col-span-5 self-start lg:sticky lg:top-24 space-y-6">
             <div className="glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden shadow-2xl">
                 {/* Visual RGB border accent glowing */}
                 <div

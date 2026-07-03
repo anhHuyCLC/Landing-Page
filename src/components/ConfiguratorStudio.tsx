@@ -1,9 +1,6 @@
 
 import { Gift, Sparkles, X } from "lucide-react";
 import { formatPrice, type ActiveBuild, type AmbientTheme, type ComponentCategory, type ComponentOption } from "../type";
-import { useEffect, useState } from "react";
-import { componentService } from "../service/components";
-
 
 interface ConfiguratorStudioProps {
     activeBuild: ActiveBuild;
@@ -11,6 +8,9 @@ interface ConfiguratorStudioProps {
     selectTheme: (theme: AmbientTheme) => void;
     engravingText: string;
     setEngravingText: (text: string) => void;
+    // Nhận từ App.tsx thay vì tự gọi API — tránh double API call
+    categories: ComponentCategory[];
+    themes: AmbientTheme[];
 }
 
 export default function ConfiguratorStudio({
@@ -18,34 +18,12 @@ export default function ConfiguratorStudio({
     selectOption,
     selectTheme,
     engravingText,
-    setEngravingText
+    setEngravingText,
+    categories,
+    themes,
 }: ConfiguratorStudioProps) {
-    const [categories, setCategories] = useState<ComponentCategory[]>([]);
-    const [themes, setThemes] = useState<AmbientTheme[]>([])
-    const [loading, setLoading] = useState(true)
     const primaryColor = activeBuild.theme.primaryColor;
 
-    useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                setLoading(true);
-                const data = await componentService.getAllCategories()
-                const data2 = await componentService.getAllTheme()
-                setCategories(data);
-                setThemes(data2)
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        loadCategories()
-    }, [])
-    if (loading) return (
-        <div className="lg:col-span-7 flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-    )
     return (
         <div className="lg:col-span-7 space-y-10">
             <div className="space-y-4">
@@ -62,7 +40,9 @@ export default function ConfiguratorStudio({
                     độ bảo hành vàng 1-đổi-1 của Aurora Systems.
                 </p>
             </div>
-            <div className="glass-panel rounded-3xl p-6 border border-white/5 ">
+
+            {/* Theme selector */}
+            <div className="glass-panel rounded-3xl p-6 border border-white/5">
                 <h3 className="font-mono text-xs uppercase tracking-widest text-white mb-4 flex items-center gap-2">
                     <Sparkles size={14} style={{ color: primaryColor }} />
                     SYSTEM LIGHTING ACCENT (AURA RGB)
@@ -88,6 +68,7 @@ export default function ConfiguratorStudio({
                 </div>
             </div>
 
+            {/* Component categories */}
             {categories.map((category) => (
                 <div key={category.id} className="glass-panel rounded-3xl p-6 border border-white/5 space-y-4">
                     <div className="flex justify-between items-center">
@@ -106,12 +87,14 @@ export default function ConfiguratorStudio({
                             return (
                                 <div key={option.id}
                                     onClick={() => selectOption(category.id, option)}
-                                    className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer flex justify-between items-center gap-4 ${isSelected ? "bg-white/5 shadow-inner" : "bg-transparent border-white/5 hover:border-white/5"}`}
+                                    className={`p-4 md:p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${isSelected ? "bg-white/5 shadow-inner" : "bg-transparent border-white/5 hover:border-white/5"}`}
                                     style={{
                                         borderColor: isSelected ? primaryColor : "rgba(255,255,255,0.05)",
                                     }}>
-                                    <div className="flex items-start gap-4">
-                                        <div className="pt-1">
+                                    {/* Fix mobile: dùng flex-wrap thay vì cứng 1 hàng */}
+                                    <div className="flex items-start gap-3">
+                                        {/* Radio dot */}
+                                        <div className="pt-0.5 shrink-0">
                                             <div className="w-4 h-4 rounded-full border flex items-center justify-center transition-all duration-300" style={{
                                                 borderColor: isSelected ? primaryColor : "rgba(255,255,255,0.2)",
                                             }}>
@@ -121,22 +104,23 @@ export default function ConfiguratorStudio({
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="space-y-1 text-left">
+                                        {/* Tên option + price — wrap tự nhiên trên mobile */}
+                                        <div className="flex flex-1 flex-wrap justify-between items-start gap-x-4 gap-y-1">
                                             <div className="font-sans text-sm font-bold text-white leading-normal">
                                                 {option.specs}
                                             </div>
+                                            <div className="shrink-0">
+                                                {option.priceDelta === 0 ? (
+                                                    <span className="font-mono text-[10px] text-white/50 bg-white/5 px-2.5 py-1 rounded-full border border-white/10 uppercase tracking-wider">
+                                                        Base
+                                                    </span>
+                                                ) : (
+                                                    <span className="font-mono text-xs font-semibold text-white">
+                                                        {formatPrice(option.priceDelta, true)}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="text-right shrink-0">
-                                        {option.priceDelta === 0 ? (
-                                            <span className="font-mono text-[10px] text-white/50 bg-white/5 px-2.5 py-1 rounded-full border border-white/10 uppercase tracking-wider">
-                                                Base
-                                            </span>
-                                        ) : (
-                                            <span className="font-mono text-xs font-semibold text-white">
-                                                {formatPrice(option.priceDelta, true)}
-                                            </span>
-                                        )}
                                     </div>
                                 </div>
                             )
@@ -144,6 +128,8 @@ export default function ConfiguratorStudio({
                     </div>
                 </div>
             ))}
+
+            {/* Engraving */}
             <div className="glass-panel rounded-3xl p-6 border border-white/5 space-y-4">
                 <h3 className="font-mono text-xs uppercase tracking-widest text-white flex items-center gap-2">
                     <Gift size={14} style={{ color: primaryColor }} />
@@ -157,13 +143,13 @@ export default function ConfiguratorStudio({
                     <input type="text" maxLength={32} value={engravingText} onChange={(e) => setEngravingText(e.target.value)} placeholder="Ví dụ: ALEX SUPREME MACHINE (Tối đa 32 ký tự)" className="w-full bg-[#0B0B0B] border border-white/10 hover:border-white/20 focus:border-white focus:outline-none rounded-xl px-4 py-3.5 font-mono text-xs text-white transition-colors" />
 
                     {engravingText && (
-                        <div className="glass-panel rounded-xl p-4 border border-white/5 flex items-center justify-between">
-                            <div className="space-y-1">
+                        <div className="glass-panel rounded-xl p-4 border border-white/5 flex items-center justify-between gap-3">
+                            <div className="space-y-1 min-w-0">
                                 <span className="font-mono text-[9px] text-[#bac9cc] uppercase">
                                     Bản xem trước phần khắc la-ze kính:
                                 </span>
                                 <div
-                                    className="font-display font-black text-sm tracking-widest text-white animate-pulse"
+                                    className="font-display font-black text-sm tracking-widest text-white animate-pulse truncate"
                                     style={{ textShadow: `0 0 10px ${primaryColor}` }}
                                 >
                                     &quot;{engravingText.toUpperCase()}&quot;
@@ -171,7 +157,7 @@ export default function ConfiguratorStudio({
                             </div>
                             <button
                                 onClick={() => setEngravingText("")}
-                                className="p-1 rounded-full hover:bg-white/5 text-white/60 hover:text-white"
+                                className="p-1 rounded-full hover:bg-white/5 text-white/60 hover:text-white shrink-0"
                             >
                                 <X size={14} />
                             </button>

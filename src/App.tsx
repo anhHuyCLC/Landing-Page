@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Menu, X } from "lucide-react";
 
 import HeroSection from "./components/HeroSection";
 import ExplodedView from "./components/ExplodedView";
@@ -11,46 +11,21 @@ import CheckoutModal from "./components/CheckoutModal";
 import { formatPrice, type ActiveBuild, type AmbientTheme, type BenchmarkGame, type ComponentCategory, type ComponentOption } from "./type";
 import { componentService } from "./service/components";
 
-// Default fallback data — UI renders immediately with this, no API wait needed
-const DEFAULT_THEME: AmbientTheme = {
-  id: "arctic",
-  name: "Arctic Blue",
-  primaryColor: "#38BDF8",
-  glowColor: "rgba(56,189,248,0.3)",
-  borderColor: "rgba(56,189,248,0.3)",
-  gradientFrom: "#38BDF8",
-};
-
-const DEFAULT_OPTION: ComponentOption = {
-  id: "default",
-  name: "Loading...",
-  specs: "",
-  priceDelta: 0,
-  powerDraw: 0,
-  fpsFactor: 1,
-  renderFactor: 1,
-  thermalFactor: 1,
-};
-
-const DEFAULT_BUILD: ActiveBuild = {
-  cpu: DEFAULT_OPTION,
-  gpu: DEFAULT_OPTION,
-  ram: DEFAULT_OPTION,
-  storage: DEFAULT_OPTION,
-  psu: DEFAULT_OPTION,
-  theme: DEFAULT_THEME,
-};
-
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("configurator");
+  const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const BASE_PRICE = 4222;
 
-  // Khởi tạo với default data ngay — không block render
-  const [activeBuild, setActiveBuild] = useState<ActiveBuild>(DEFAULT_BUILD);
+  const [activeBuild, setActiveBuild] = useState<ActiveBuild | null>(null);
+  // Lưu categories & themes để truyền xuống ConfiguratorStudio, tránh double API call
+  const [categories, setCategories] = useState<ComponentCategory[]>([]);
+  const [themes, setThemes] = useState<AmbientTheme[]>([]);
 
   useEffect(() => {
     const loadCategories = async () => {
       try {
+        setLoading(true);
         // Gọi 2 API song song thay vì tuần tự — giảm ~50% thời gian chờ
         const [data, data2] = await Promise.all([
           componentService.getAllCategories(),
@@ -64,6 +39,8 @@ export default function App() {
           const storageCat = data.find((c: ComponentCategory) => c.id === "storage") || data[3] || data[0];
           const psuCat = data.find((c: ComponentCategory) => c.id === "psu") || data[4] || data[0];
 
+          setCategories(data);
+          setThemes(data2);
           setActiveBuild({
             cpu: cpuCat.options[0],
             gpu: gpuCat.options[0],
@@ -75,7 +52,8 @@ export default function App() {
         }
       } catch (error) {
         console.log(error);
-        // Giữ nguyên DEFAULT_BUILD nếu API lỗi
+      } finally {
+        setLoading(false);
       }
     };
     loadCategories();
@@ -145,7 +123,12 @@ export default function App() {
     setEngravingText("");
   };
 
-  // Không còn loading block — UI render ngay với DEFAULT_BUILD
+  if (loading || !activeBuild) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
 
   const totalPrice =
     BASE_PRICE +
@@ -208,6 +191,8 @@ export default function App() {
               AURORA
             </span>
           </div>
+
+          {/* Desktop nav links */}
           <div className="hidden md:flex gap-10 items-center">
             <button
               onClick={() => {
@@ -253,7 +238,7 @@ export default function App() {
             </button>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             <div className="hidden xl:flex flex-col text-right">
               <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase">LIVE TOTAL</span>
               <span className="text-sm font-bold text-white">{formatPrice(totalPrice)}</span>
@@ -263,16 +248,66 @@ export default function App() {
                 setCheckoutStep("summary");
                 setShowCheckoutModal(true);
               }}
-              className="relative overflow-hidden px-6 py-3 font-mono text-[10px] uppercase tracking-[0.2em] font-bold text-black transition-all duration-300 shadow-xl active:scale-95 hover:bg-white cursor-pointer"
+              className="relative overflow-hidden px-4 md:px-6 py-2.5 md:py-3 font-mono text-[10px] uppercase tracking-[0.2em] font-bold text-black transition-all duration-300 shadow-xl active:scale-95 hover:bg-white cursor-pointer"
               style={{
                 backgroundColor: activeBuild.theme.primaryColor,
               }}
             >
               <span className="relative z-10 flex items-center gap-2">
-                Build Now
-                <ShoppingBag size={12} />
+                <span className="hidden sm:inline">Build Now</span>
+                <ShoppingBag size={14} />
               </span>
             </button>
+            {/* Hamburger — chỉ hiện trên mobile */}
+            <button
+              id="mobile-menu-btn"
+              onClick={() => setMobileMenuOpen((o) => !o)}
+              className="md:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile drawer menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+          } border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl`}
+        >
+          <div className="flex flex-col px-6 py-4 gap-1">
+            {[
+              { label: "Models", tab: "models", target: "components" },
+              { label: "Configurator", tab: "configurator", target: "customizer" },
+              { label: "Telemetry", tab: "benchmark", target: "telemetry" },
+            ].map(({ label, tab, target }) => (
+              <button
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setMobileMenuOpen(false);
+                  setTimeout(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth" }), 100);
+                }}
+                className="flex items-center justify-between w-full py-3.5 border-b border-white/5 text-left last:border-0"
+              >
+                <span
+                  className="font-mono text-[11px] uppercase tracking-[0.2em] font-semibold"
+                  style={{ color: activeTab === tab ? activeBuild.theme.primaryColor : "rgba(255,255,255,0.6)" }}
+                >
+                  {label}
+                </span>
+                {activeTab === tab && (
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: activeBuild.theme.primaryColor }} />
+                )}
+              </button>
+            ))}
+            <div className="pt-3 flex justify-between items-center">
+              <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase">Live Total</span>
+              <span className="font-mono text-sm font-bold" style={{ color: activeBuild.theme.primaryColor }}>
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
           </div>
         </div>
       </nav>
@@ -310,6 +345,8 @@ export default function App() {
               selectTheme={selectTheme}
               engravingText={engravingText}
               setEngravingText={setEngravingText}
+              categories={categories}
+              themes={themes}
             />
 
             <BuildSummary

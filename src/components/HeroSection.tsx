@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { Sparkles, ArrowRight, ChevronDown } from "lucide-react";
 
 interface HeroSectionProps {
@@ -17,10 +18,12 @@ export default function HeroSection({ primaryColor }: HeroSectionProps) {
                 style={{ backgroundColor: primaryColor }}
             />
 
-            {/* Dùng CSS animation thay vì framer-motion để không block LCP paint */}
-            <div
+            {/* opacity bắt đầu từ 1 để không block LCP, chỉ animate transform */}
+            <motion.div
+                initial={{ opacity: 1, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 className="space-y-6 max-w-4xl"
-                style={{ animation: "heroFadeIn 0.8s ease forwards" }}
             >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 mb-2">
                     <Sparkles size={14} style={{ color: primaryColor }} />
@@ -56,7 +59,7 @@ export default function HeroSection({ primaryColor }: HeroSectionProps) {
                         Explore Hardware
                     </button>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Scroll Indicator */}
             <div
