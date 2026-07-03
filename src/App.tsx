@@ -174,7 +174,7 @@ export default function App() {
       <div className="absolute top-0 left-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
       <div className="absolute top-0 right-4 w-[1px] h-full bg-white/[0.02] z-0 hidden lg:block" />
       <nav className="fixed top-0 w-full z-40 border-b border-white/10 bg-[#050505]/80 backdrop-blur-xl">
-        <div className="flex justify-between items-center w-full px-6 md:px-20 py-6 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center w-full px-6 lg:px-20 py-6 max-w-7xl mx-auto">
 
           <div className="flex items-center gap-3">
             <div
@@ -192,8 +192,8 @@ export default function App() {
             </span>
           </div>
 
-          {/* Desktop nav links */}
-          <div className="hidden md:flex gap-10 items-center">
+          {/* Desktop nav links — chỉ hiện từ lg (1024px) */}
+          <div className="hidden lg:flex gap-10 items-center">
             <button
               onClick={() => {
                 setActiveTab("models");
@@ -262,7 +262,7 @@ export default function App() {
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileMenuOpen((o) => !o)}
-              className="md:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
+              className="lg:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -272,7 +272,7 @@ export default function App() {
 
         {/* Mobile drawer menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
           } border-t border-white/5 bg-[#050505]/95 backdrop-blur-xl`}
         >

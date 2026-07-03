@@ -41,7 +41,7 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
           <div className="absolute inset-0 glass-panel rounded-3xl p-4 neon-glow hover:shadow-[0_0_50px_rgba(0,229,255,0.05)] transition-all duration-500">
             <img
               alt="CPU Hardware Zoom"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFLh0TxSrtVLnn94xL1Ty1qwvmSjfYOpOqs-lz4yUBSUv_YTu9U7UYJclHmnDv4uwOOEhjYnsw5COVEuvXU660a_MpH52Oj0PnflhqM1fkvdvosJEbS-GUwV8_8I1g_ZJpTHK17m5JEg3S6V8iMw-fgKmYiI-iB0EUepzL1Qj9fDx1vMpiDUS6KZLEzmSY-e8DP-Q8yROIhe-QQWJ-daLZM3-8zu4QPaYH_u0gWPJ-GRsGQOBxZSMExtkn4NiMz_44yMw19TYi6SjD"
+              src="/images/cpu-zoom.jpg"
               className="w-full h-full object-cover rounded-2xl"
               loading="lazy"
               decoding="async"
@@ -57,7 +57,7 @@ export default function HardwareHighlights({ primaryColor }: HardwareHighlightsP
           <div className="absolute inset-0 glass-panel rounded-3xl p-4 neon-glow hover:shadow-[0_0_50px_rgba(0,229,255,0.05)] transition-all duration-500">
             <img
               alt="GPU Hardware Zoom"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3YyjG6k05GNDEyUQPuZvF0Ocd2FOu6JLVcQDInoVFSZb5L2FJcu4DNM4daUIDTytb7evx31CiQYKvNXURaXq3YfnQPoPpd3XLHNV7d22dkrv0SCoyjAACTxfzlngKvEVtgYrKMhruiOoUPHoySSy-JLsd6-qKddvrXJ7iQSfarpskibWp8OyVUa1vD3tAsgwGw28yUq6jxjMc8z29wSg8EOBnkDDKF4MS5NLUZKENwGCNucq-CjGdbocZrJx7_jvB2Y3KCDGrEEP2"
+              src="/images/gpu-zoom.jpg"
               className="w-full h-full object-cover rounded-2xl"
               loading="lazy"
               decoding="async"

@@ -30,8 +30,10 @@ export default function ExplodedView({
         <div className="absolute inset-0 z-0">
           <img
             alt="Exploded PC View"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCmBqcU-LP9kkwBQA_eTLAO0I8Zp0B2ar_YfXag8AOv-5r_ogU3ltIEzYgfplD2W35_2irM70JLqKMwCUjG44IVLEbrJIE2ttxHh-a0WnMQr-hQrWSDeVbAZWBiCHjGbAuqSlDK55Rl3Swd_6kjGCjDErznEdiMR9RwsuSY-nKQ0fOe3prL41Bmb3g84ttaHBQOcQ-b8jw_ju9ZcsBERhB1L4pAclbXtXNLBGhC-YYBohMkrSUONHw38DOTTg4jcxz0xrduiOMpcYt"
+            src="/images/exploded-pc.jpg"
             className="w-full h-full object-cover opacity-40 mix-blend-screen scale-105 group-hover:scale-100 transition-transform duration-1000"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
         </div>
